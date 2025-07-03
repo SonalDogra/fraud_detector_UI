@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transaction Analysis Result</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 30px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        h2, h3 {
+            color: #2c3e50;
+        }
+
+        p, pre, span {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        pre {
+            background: #f7f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border-left: 5px solid #3498db;
+        }
+
+        .section {
+            margin-top: 40px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .action-section {
+            border-top: 1px dashed #ccc;
+            padding-top: 30px;
+            margin-top: 30px;
+        }
+
+        .endpoint {
+            background: #ecf0f1;
+            font-family: monospace;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .note {
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>🔎 AI Fraud Detection Report</h2>
+    <p><strong>🧾 Verdict:</strong> <span th:text="${result.verdict}">N/A</span></p>
+
+    <div class="section">
+        <h3>🧠 Explanation from AI Agent</h3>
+        <pre th:text="${result.explanation}">AI analysis will appear here</pre>
+    </div>
+
+    <div class="section">
+        <h3>🛡️ Session Hijack Risk</h3>
+        <pre th:text="${hijackResult}">Hijack analysis will appear here</pre>
+    </div>
+
+    <div class="section">
+        <form th:action="@{/validate}" method="post">
+            <input type="hidden" name="consumerId" th:value="${result.txn.consumerId}" />
+            <button type="submit" name="isFraud" value="true">✅ Confirm Fraud</button>
+            <button type="submit" name="isFraud" value="false">❌ Mark as Safe</button>
+        </form>
+    </div>
+
+    <div class="section action-section">
+        <h3>⚙️ AI Agent-Suggested Actions</h3>
+        <p>Based on the analysis, the AI agent suggests possible actions. These endpoint examples are <strong>illustrative</strong> and should be <strong>integrated with your banking backend API systems</strong> as needed.</p>
+
+        <div class="endpoint">POST /api/action/freeze-account?userId=${result.txn.consumerId}</div>
+        <div class="endpoint">POST /api/action/send-alert?txnId=${result.txn.id}</div>
+        <div class="endpoint">POST /api/action/escalate?level=2&reason=suspected_fraud</div>
+
+        <p class="note">Note: These actions are suggestive. Actual implementation depends on internal API structures, access control, and compliance policies of respective backend API systems of banks.</p>
+    </div>
+
+    <div class="section">
+        <a href="/new">← Analyze another transaction</a>
+    </div>
+</div>
+</body>
+</html>
