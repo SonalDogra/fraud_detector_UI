@@ -46,7 +46,7 @@
     document.addEventListener("DOMContentLoaded", async () => {
         try {
             // Fetch session ID from server
-            const res = await fetch("https://fraud-detector-ui.onrender.com//get-session-id");
+            const res = await fetch("https://fraud-detector-ui.onrender.com/get-session-id");
             const { sessionId } = await res.json();
 
             // Store session ID in hidden input
