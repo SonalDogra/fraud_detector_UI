@@ -1,218 +1,85 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Smart AI Fraud Detector</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background: #f4f6f9;
-            font-family: 'Segoe UI', sans-serif;
-        }
-        .hero {
-            background-color: #004a87;
-            color: white;
-            padding: 50px 20px;
-            text-align: center;
-        }
-        .form-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            margin-top: 40px;
-        }
-        .btn-blue {
-            background-color: #004a87;
-            color: white;
-        }
-        .btn-blue:hover {
-            background-color: #035ca3;
-        }
-        label {
-            font-weight: 500;
-        }
-        .section-title {
-            margin-bottom: 20px;
-            color: #004a87;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <title>Fraud Transaction Analyzer</title>
 </head>
-
 <body>
+<h1>Enter Transaction Details</h1>
 
-<div class="hero">
-    <h1>🛡️ Smart AI Fraud Detection</h1>
-    <p>Prevent online fraud using behavioral biometrics + AI</p>
-    <button class="btn btn-light me-2" data-bs-toggle="modal" data-bs-target="#howItWorksModal">🔍 Learn More</button>
-    <a href="#txnForm" class="btn btn-blue">🚀 Start Demo</a>
-</div>
+<form method="post" action="/analyze">
+    <label>Consumer ID:</label><br>
+    <input type="text" name="consumerId" required><br><br>
 
-<!-- Modal: Learn More -->
-<div class="modal fade" id="howItWorksModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">🔍 How Our AI Detects and Learns Fraud</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h6>🚀 What powers our fraud detection?</h6>
-                <ul>
-                    <li><strong>Behavioral Biometrics:</strong> We capture typing delays, timezone offset, and device traits.</li>
-                    <li><strong>Session-Aware:</strong> Data is linked to a session ID — this helps detect session hijacks.</li>
-                    <li><strong>AI-Powered Analysis:</strong> Each transaction is analyzed by a large language model (LLM) with behavioral + contextual features.</li>
-                </ul>
+    <label>Amount (₹):</label><br>
+    <input type="number" name="amount" step="0.01" required><br><br>
 
-                <h6>📚 How does the system learn over time?</h6>
-                <ul>
-                    <li>Each transaction is logged, but only <strong>user-validated samples</strong> are used for training.</li>
-                    <li>These are embedded into a <strong>vector database</strong> using sentence-level embeddings.</li>
-                    <li>Once enough data is collected (e.g. 100+ validated), we call <code>/rebuild-chroma</code>.</li>
-                    <li>This retrains the vector store and improves fraud similarity detection.</li>
-                    <li>This process can later be <strong>automated</strong> as feedback grows.</li>
-                </ul>
+    <label>Location:</label><br>
+    <input type="text" name="location" required><br><br>
 
-                <h6>🏭 How is this handled in production?</h6>
-                <ul>
-                    <li>A JavaScript SDK collects behavioral signals automatically — no user action needed.</li>
-                    <li>Every session is uniquely tracked and sent to the FastAPI backend for analysis.</li>
-                    <li>Feedback loop helps the AI get smarter over time with real fraud/safe patterns.</li>
-                </ul>
+    <label>Transaction Hour (0–23):</label><br>
+    <input type="number" name="hour" min="0" max="23" required><br><br>
 
-                <h6>📈 Example Flow</h6>
-                <ol>
-                    <li>User submits a transaction</li>
-                    <li>Behavioral and contextual data logged with session ID</li>
-                    <li>AI makes a decision → user gives feedback</li>
-                    <li>After enough verified cases → system retrains memory</li>
-                    <li>AI now uses past patterns to improve fraud detection 🔁</li>
-                </ol>
+    <label>Device ID:</label><br>
+    <input type="text" name="deviceId" required><br><br>
 
-                <p class="text-muted mt-3">💡 Over time, the system becomes more accurate, personalized, and fraud-aware.</p>
-            </div>
-        </div>
-    </div>
-</div>
+    <label>Known Locations (comma-separated):</label><br>
+    <input type="text" name="knownLocationsInput" required><br><br>
 
-<!-- Form -->
-<div class="container" id="txnForm">
-    <div class="form-card mt-4">
-        <h3 class="section-title">📄 Submit a Transaction</h3>
-        <form method="post" th:action="@{/analyze}">
-            <div class="row mb-3">
-                <div class="col">
-                    <label>Consumer ID</label>
-                    <input type="text" class="form-control" name="consumerId" required>
-                </div>
-                <div class="col">
-                    <label>Amount ($)</label>
-                    <input type="number" class="form-control" step="0.01" name="amount" required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col">
-                    <label>Location</label>
-                    <input type="text" class="form-control" name="location" required>
-                </div>
-                <div class="col">
-                    <label>Hour (0–23)</label>
-                    <input type="number" class="form-control" min="0" max="23" name="hour" required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col">
-                    <label>Device ID</label>
-                    <input type="text" class="form-control" name="deviceId" required>
-                </div>
-                <div class="col">
-                    <label>Average Txn Amount</label>
-                    <input type="number" class="form-control" step="0.01" name="averageTransactionAmount" required>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Known Locations (comma-separated)</label>
-                <input type="text" class="form-control" name="knownLocationsInput" required>
-            </div>
-            <div class="mb-3">
-                <label>Known Devices (comma-separated)</label>
-                <input type="text" class="form-control" name="knownDevicesInput" required>
-            </div>
-            <div class="mb-3">
-                <label>Recent Flags (optional)</label>
-                <input type="text" class="form-control" name="recentFlagsInput">
-            </div>
+    <label>Known Devices (comma-separated):</label><br>
+    <input type="text" name="knownDevicesInput" required><br><br>
 
-            <!-- Hidden fields -->
-            <input type="hidden" id="typingDelays" name="typingDelays">
-            <input type="hidden" id="timezoneOffset" name="timezoneOffset">
-            <input type="hidden" id="userAgent" name="userAgent">
+    <label>Average Transaction Amount (₹):</label><br>
+    <input type="number" name="averageTransactionAmount" step="0.01" required><br><br>
 
-            <button type="submit" class="btn btn-blue w-100">🔎 Analyze Transaction</button>
-        </form>
-    </div>
-</div>
+    <label>Recent Flags (comma-separated):</label><br>
+    <input type="text" name="recentFlagsInput"><br><br>
 
-<!-- JS: Bootstrap + Behavioral Tracking -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <button type="submit">Analyze Transaction</button>
+</form>
+
+<!-- 🧠 Session Logging Script -->
 <script>
-    let keyTimestamps = [];
+    let typingTimestamps = [];
+    let fingerprint = navigator.userAgent;
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const form = document.querySelector("form");
-
-        // Track typing speed
-        const fields = document.querySelectorAll("input[type='text'], input[type='number']");
-        fields.forEach(field => {
-            field.addEventListener("keydown", () => {
-                keyTimestamps.push(Date.now());
-            });
-        });
-
-        form.addEventListener("submit", async (e) => {
-            // Prevent default form submission until logging is done
-            e.preventDefault();
-
-            // 1. Typing delay
-            let delays = [];
-            for (let i = 1; i < keyTimestamps.length; i++) {
-                delays.push(keyTimestamps[i] - keyTimestamps[i - 1]);
-            }
-
-            // 2. Set hidden fields
-            document.getElementById("typingDelays").value = JSON.stringify(delays);
-            document.getElementById("timezoneOffset").value = new Date().getTimezoneOffset();
-            document.getElementById("userAgent").value = navigator.userAgent;
-
-            try {
-                // 3. Get session ID from Spring Boot
-                const sessionId = await fetch("/get-session-id")
-                    .then(res => res.json())
-                    .then(data => data.sessionId);
-
-                // 4. Send behavior log to FastAPI
-                await fetch("https://fraud-detector-agent.onrender.com/log-session", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        session_id: sessionId,
-                        data: {
-                            typing_delays: delays,
-                            timezoneOffset: new Date().getTimezoneOffset(),
-                            userAgent: navigator.userAgent
-                        }
-                    })
-                });
-
-                // 5. Submit form to Spring Boot after logging
-                form.submit();
-
-            } catch (err) {
-                console.error("Session logging failed:", err);
-                alert("Failed to log session data. Please try again.");
-            }
+    document.querySelectorAll("input").forEach(input => {
+        input.addEventListener("keydown", () => {
+            typingTimestamps.push(Date.now());
         });
     });
-</script>
 
+    const calculateTypingInterval = () => {
+        if (typingTimestamps.length < 2) return 0;
+        let intervals = [];
+        for (let i = 1; i < typingTimestamps.length; i++) {
+            intervals.push(typingTimestamps[i] - typingTimestamps[i - 1]);
+        }
+        return Math.round(intervals.reduce((a, b) => a + b, 0) / intervals.length);
+    };
+
+    window.addEventListener("beforeunload", async () => {
+        try {
+            const sessionRes = await fetch("/get-session-id");
+            const sessionData = await sessionRes.json();
+            const sessionId = sessionData.sessionId;
+
+            await fetch("https://fraud-detector-agent.onrender.com/log-session", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    data: {
+                        typing_interval_ms: calculateTypingInterval(),
+                        timezoneOffset: new Date().getTimezoneOffset(),
+                        fingerprint: fingerprint
+                    }
+                })
+            });
+        } catch (e) {
+            console.error("Session logging failed:", e);
+        }
+    });
+</script>
 </body>
 </html>
