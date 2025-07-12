@@ -183,27 +183,33 @@
             document.getElementById("timezoneOffset").value = new Date().getTimezoneOffset();
             document.getElementById("userAgent").value = navigator.userAgent;
 
-            // 3. Get session ID from Spring Boot
-            const sessionId = await fetch("/get-session-id")
-                .then(res => res.json())
-                .then(data => data.sessionId);
+            try {
+                // 3. Get session ID from Spring Boot
+                const sessionId = await fetch("/get-session-id")
+                    .then(res => res.json())
+                    .then(data => data.sessionId);
 
-            // 4. Send behavior log to FastAPI
-            await fetch("https://fraud-detector-agent.onrender.com/log-session", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    session_id: sessionId,
-                    data: {
-                        typing_delays: delays,
-                        timezoneOffset: new Date().getTimezoneOffset(),
-                        userAgent: navigator.userAgent
-                    }
-                })
-            });
+                // 4. Send behavior log to FastAPI
+                await fetch("https://fraud-detector-agent.onrender.com/log-session", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        data: {
+                            typing_delays: delays,
+                            timezoneOffset: new Date().getTimezoneOffset(),
+                            userAgent: navigator.userAgent
+                        }
+                    })
+                });
 
-            // 5. Submit form to Spring Boot after logging
-            form.submit();
+                // 5. Submit form to Spring Boot after logging
+                form.submit();
+
+            } catch (err) {
+                console.error("Session logging failed:", err);
+                alert("Failed to log session data. Please try again.");
+            }
         });
     });
 </script>
