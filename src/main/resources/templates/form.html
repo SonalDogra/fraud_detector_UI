@@ -7,6 +7,9 @@
 <body>
 <h1>Enter Transaction Details</h1>
 
+<!-- Hidden field for session ID -->
+<input type="hidden" id="sessionId" th:value="${sessionId}" />
+
 <form method="post" action="/analyze">
     <label>Consumer ID:</label><br>
     <input type="text" name="consumerId" required><br><br>
@@ -38,46 +41,33 @@
     <button type="submit">Analyze Transaction</button>
 </form>
 
-<!-- 🧠 Session Logging Script -->
+<!-- ✅ Session Logging on Page Load -->
 <script>
-    let typingTimestamps = [];
-    let fingerprint = navigator.userAgent;
-
-    document.querySelectorAll("input").forEach(input => {
-        input.addEventListener("keydown", () => {
-            typingTimestamps.push(Date.now());
-        });
-    });
-
-    const calculateTypingInterval = () => {
-        if (typingTimestamps.length < 2) return 0;
-        let intervals = [];
-        for (let i = 1; i < typingTimestamps.length; i++) {
-            intervals.push(typingTimestamps[i] - typingTimestamps[i - 1]);
-        }
-        return Math.round(intervals.reduce((a, b) => a + b, 0) / intervals.length);
-    };
-
-    window.addEventListener("beforeunload", async () => {
+    document.addEventListener("DOMContentLoaded", async () => {
         try {
             const sessionRes = await fetch("/get-session-id");
             const sessionData = await sessionRes.json();
             const sessionId = sessionData.sessionId;
 
+            // Optional: store for use in other places
+            document.getElementById("sessionId").value = sessionId;
+
+            // Simulate user fingerprint and typing pattern
+            const data = {
+                fingerprint: navigator.userAgent,
+                timezoneOffset: new Date().getTimezoneOffset(),
+                typing_interval_ms: 150 + Math.floor(Math.random() * 50)
+            };
+
             await fetch("https://fraud-detector-agent.onrender.com/log-session", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    session_id: sessionId,
-                    data: {
-                        typing_interval_ms: calculateTypingInterval(),
-                        timezoneOffset: new Date().getTimezoneOffset(),
-                        fingerprint: fingerprint
-                    }
-                })
+                body: JSON.stringify({ session_id: sessionId, data })
             });
+
+            console.log("✅ Session behavior logged");
         } catch (e) {
-            console.error("Session logging failed:", e);
+            console.error("❌ Failed to log session:", e);
         }
     });
 </script>
