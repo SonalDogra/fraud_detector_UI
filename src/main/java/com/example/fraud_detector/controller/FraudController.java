@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 public class FraudController {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String ANALYZE_API_URL = "http://localhost:8000/analyze";
-    private final String HIJACK_CHECK_API_URL = "http://localhost:8000/hijack-check";
+    private final String ANALYZE_API_URL = "https://fraud-detector-agent.onrender.com/analyze";
+    private final String HIJACK_CHECK_API_URL = "https://fraud-detector-agent.onrender.com/hijack-check";
 
     @GetMapping("/new")
     public String showForm() {
