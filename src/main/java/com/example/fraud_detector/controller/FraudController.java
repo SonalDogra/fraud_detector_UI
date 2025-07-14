@@ -26,9 +26,11 @@ public class FraudController {
     private final String FRAUD_HISTORY_PATH = "fraud_history.jsonl";
 
     @GetMapping("/new")
-    public String showForm() {
+    public String showForm(HttpSession session, Model model) {
+        model.addAttribute("sessionId", session.getId()); // ✅ inject to Thymeleaf
         return "form";
     }
+
 
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
