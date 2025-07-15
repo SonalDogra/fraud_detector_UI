@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fraud Transaction Analyzer</title>
+</head>
+<body>
+<h1>Enter Transaction Details</h1>
+
+<form method="post" action="/analyze">
+    <!-- ✅ Injected by Thymeleaf -->
+    <input type="hidden" id="sessionId" name="sessionId" th:value="${sessionId}" />
+
+    <label>Consumer ID:</label><br>
+    <input type="text" name="consumerId" required><br><br>
+
+    <label>Amount (₹):</label><br>
+    <input type="number" name="amount" step="0.01" required><br><br>
+
+    <label>Location:</label><br>
+    <input type="text" name="location" required><br><br>
+
+    <label>Transaction Hour (0–23):</label><br>
+    <input type="number" name="hour" min="0" max="23" required><br><br>
+
+    <label>Device ID:</label><br>
+    <input type="text" name="deviceId" required><br><br>
+
+    <label>Known Locations (comma-separated):</label><br>
+    <input type="text" name="knownLocationsInput" required><br><br>
+
+    <label>Known Devices (comma-separated):</label><br>
+    <input type="text" name="knownDevicesInput" required><br><br>
+
+    <label>Average Transaction Amount (₹):</label><br>
+    <input type="number" name="averageTransactionAmount" step="0.01" required><br><br>
+
+    <label>Recent Flags (comma-separated):</label><br>
+    <input type="text" name="recentFlagsInput"><br><br>
+
+    <button type="submit">🔍 Analyze Transaction</button>
+</form>
+
+<!-- ✅ Session Logging Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const sessionId = document.getElementById("sessionId").value;
+            if (!sessionId) throw new Error("Session ID missing!");
+
+            const data = {
+                fingerprint: navigator.userAgent,
+                timezoneOffset: new Date().getTimezoneOffset(),
+                typing_interval_ms: 150 + Math.floor(Math.random() * 50)
+            };
+
+            const res = await fetch("https://fraud-detector-agent.onrender.com/log-session", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ session_id: sessionId, data })
+            });
+
+            const json = await res.json();
+            console.log("✅ Session logged:", json);
+        } catch (error) {
+            console.error("❌ Session logging failed:", error);
+        }
+    });
+</script>
+</body>
+</html>

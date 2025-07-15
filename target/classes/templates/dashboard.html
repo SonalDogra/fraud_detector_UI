@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>📊 Fraud Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; padding: 40px; }
+        .card {
+            background: #fff; padding: 30px; max-width: 900px; margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 10px;
+        }
+        h2 { color: #2c3e50; }
+        .metric { font-size: 1.2em; margin: 10px 0; }
+        canvas { margin-top: 40px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>📊 AI Fraud Detection Dashboard</h2>
+
+    <div class="metric">Total Transactions: <strong th:text="${totalTxns}">0</strong></div>
+    <div class="metric">Confirmed Frauds: <strong th:text="${confirmedFrauds}">0</strong></div>
+
+    <canvas id="fraudChart" width="800" height="400"></canvas>
+
+    <script th:inline="javascript">
+        const labels = /*[[${fraudDates}]]*/ [];
+        const counts = /*[[${fraudCounts}]]*/ [];
+
+        new Chart(document.getElementById('fraudChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Frauds Over Time',
+                    data: counts,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+
+    <div style="margin-top:30px;">
+        <a href="/new">← Analyze Another Transaction</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+com/example/fraud_detector/repository/FeedbackRepository.class
+com/example/fraud_detector/model/Feedback.class
+com/example/fraud_detector/controller/FraudController.class
+com/example/fraud_detector/FraudDetectorApplication.class
+com/example/fraud_detector/HttpUtils.class
+com/example/fraud_detector/model/AnalysisResult.class
+com/example/fraud_detector/model/Transaction.class
