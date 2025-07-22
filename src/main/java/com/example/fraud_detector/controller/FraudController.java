@@ -107,7 +107,7 @@ public class FraudController {
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", "Error analyzing transaction: " + e.getMessage());
-            return "form";
+            return "result";
         }
     }
 
