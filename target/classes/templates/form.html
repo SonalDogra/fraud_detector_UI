@@ -2,46 +2,94 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Fraud Transaction Analyzer</title>
+    <title>Canara Fraud Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1>Enter Transaction Details</h1>
+<body class="bg-gray-100 font-sans">
+<!-- Sidebar -->
+<div class="flex min-h-screen">
+    <aside class="w-64 bg-blue-900 text-white flex flex-col p-6 space-y-6">
+        <h1 class="text-2xl font-bold">Canara Admin</h1>
+        <nav class="space-y-4 mt-8">
+            <a href="#" class="block font-semibold text-yellow-400">🔍 Analyze Transaction</a>
+        </nav>
+        <div class="mt-auto text-sm text-gray-300">© 2025 Canara Bank Fraud Division</div>
+    </aside>
 
-<form method="post" action="/analyze">
-    <!-- ✅ Injected by Thymeleaf -->
-    <input type="hidden" id="sessionId" name="sessionId" th:value="${sessionId}" />
+    <!-- Main Content -->
+    <main class="flex-1 p-10">
+        <!-- Top Bar -->
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-bold text-blue-800">🔍 Fraud Transaction Analyzer</h2>
+            <span class="text-gray-600">Admin: security.ops@canarabank.in</span>
+        </div>
 
-    <label>Consumer ID:</label><br>
-    <input type="text" name="consumerId" required><br><br>
+        <!-- Instructional Notice -->
+        <div class="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 mb-6 rounded">
+            <p><strong>Note:</strong> This portal simulates backend fraud analysis. In production, Canara Bank’s transaction systems will automatically send this data via secure APIs or SDKs from mobile/internet banking platforms.</p>
+        </div>
 
-    <label>Amount (₹):</label><br>
-    <input type="number" name="amount" step="0.01" required><br><br>
+        <!-- Form Card -->
+        <div class="bg-white p-8 rounded-2xl shadow-lg space-y-6">
+            <form method="post" action="/analyze" class="grid grid-cols-2 gap-6">
+                <input type="hidden" id="sessionId" name="sessionId" th:value="${sessionId}" />
 
-    <label>Location:</label><br>
-    <input type="text" name="location" required><br><br>
+                <div>
+                    <label class="font-semibold">Consumer ID</label>
+                    <input type="text" name="consumerId" required class="w-full border px-4 py-2 rounded mt-1" />
+                </div>
 
-    <label>Transaction Hour (0–23):</label><br>
-    <input type="number" name="hour" min="0" max="23" required><br><br>
+                <div>
+                    <label class="font-semibold">Amount (₹)</label>
+                    <input type="number" step="0.01" name="amount" required class="w-full border px-4 py-2 rounded mt-1" />
+                </div>
 
-    <label>Device ID:</label><br>
-    <input type="text" name="deviceId" required><br><br>
+                <div>
+                    <label class="font-semibold">Location</label>
+                    <input type="text" name="location" required class="w-full border px-4 py-2 rounded mt-1" />
+                </div>
 
-    <label>Known Locations (comma-separated):</label><br>
-    <input type="text" name="knownLocationsInput" required><br><br>
+                <div>
+                    <label class="font-semibold">Transaction Hour (0–23)</label>
+                    <input type="number" min="0" max="23" name="hour" required class="w-full border px-4 py-2 rounded mt-1" />
+                </div>
 
-    <label>Known Devices (comma-separated):</label><br>
-    <input type="text" name="knownDevicesInput" required><br><br>
+                <div>
+                    <label class="font-semibold">Device ID</label>
+                    <input type="text" name="deviceId" required class="w-full border px-4 py-2 rounded mt-1" />
+                </div>
 
-    <label>Average Transaction Amount (₹):</label><br>
-    <input type="number" name="averageTransactionAmount" step="0.01" required><br><br>
+                <div>
+                    <label class="font-semibold">Known Locations (comma-separated)</label>
+                    <input type="text" name="knownLocationsInput" required class="w-full border px-4 py-2 rounded mt-1" />
+                </div>
 
-    <label>Recent Flags (comma-separated):</label><br>
-    <input type="text" name="recentFlagsInput"><br><br>
+                <div>
+                    <label class="font-semibold">Known Devices (comma-separated)</label>
+                    <input type="text" name="knownDevicesInput" required class="w-full border px-4 py-2 rounded mt-1" />
+                </div>
 
-    <button type="submit">🔍 Analyze Transaction</button>
-</form>
+                <div>
+                    <label class="font-semibold">Avg. Transaction Amount (₹)</label>
+                    <input type="number" step="0.01" name="averageTransactionAmount" required class="w-full border px-4 py-2 rounded mt-1" />
+                </div>
 
-<!-- ✅ Session Logging Script -->
+                <div class="col-span-2">
+                    <label class="font-semibold">Recent Flags (comma-separated)</label>
+                    <input type="text" name="recentFlagsInput" class="w-full border px-4 py-2 rounded mt-1" />
+                </div>
+
+                <div class="col-span-2">
+                    <button type="submit" class="w-full bg-blue-700 text-white font-semibold py-3 rounded hover:bg-blue-800 transition">
+                         Run Fraud Analysis
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<!-- Session Logging Script -->
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
         try {
