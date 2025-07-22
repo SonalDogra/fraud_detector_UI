@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.fraud_detector.FraudDetectorApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.245 s -- in com.example.fraud_detector.FraudDetectorApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.232 s -- in com.example.fraud_detector.FraudDetectorApplicationTests
