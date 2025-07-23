@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class FraudController {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String ANALYZE_API_URL = "https://fraud-detector-agent-1.onrender.com0/analyze";
+    private final String ANALYZE_API_URL = "https://fraud-detector-agent-1.onrender.com/analyze";
     private final String HIJACK_CHECK_API_URL = "https://fraud-detector-agent-1.onrender.com/hijack-check";
     private final String FRAUD_HISTORY_PATH = "fraud_history.jsonl";
 
